@@ -50,23 +50,6 @@ void print_path_to_file(int n){
     outfile.close();
 }
 
-//初始化金字塔
-// void init_pyramid(int n){
-//     // pyramid = new int*[n];
-//     pyramid = new int*[n];
-//     for(int i=0;i<n;i++){
-//         pyramid[i] = new int[i+1];
-//     }
-// }
-
-// void close_pyramid(int n){
-//     for(int i = 0;i < n;i++){
-//         cout<<"pyramid[" << i << "] is closed."<<endl;
-//         delete[] pyramid[i];
-//     }
-//     delete[] pyramid;
-// }
-
 //使用随机数值填写金字塔
 void pyramid_random_fill(int n){
     for(int i = 0;i < n;i++){
@@ -77,33 +60,76 @@ void pyramid_random_fill(int n){
 }
 
 //使用正态模拟的方式填充金字塔
-void pyramid_normal_fill(int n) {
+void pyramid_normal_fill(int n, int k) {
     // 定义正态分布参数
     double mean = 50.0; // 均值
-    double stddev = 35.0; // 标准差
+    double stddev = 10.0; // 标准差
 
     // 创建一个正态分布的随机数生成器
-    std::default_random_engine generator;
-    std::normal_distribution<double> distribution(mean, stddev);
+    default_random_engine generator;
+    normal_distribution<double> distribution(mean, stddev);
+    uniform_int_distribution<int> point_distribution(0, n - 1);
 
-    pyramid.assign(n, std::vector<int>(n, 0));
+    pyramid.assign(n, vector<int>(n, 0));
 
-    // 填充金字塔
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n - i; ++j) {
-            // 生成一个符合正态分布的随机数
             double value = distribution(generator);
-            
-            // 确保数值在0到100之间
-            int clampedValue = static_cast<int>(std::round(value));
+            int clampedValue = static_cast<int>(round(value));
             if (clampedValue < 0) clampedValue = 0;
             if (clampedValue > 100) clampedValue = 100;
-
-            // 将数值放入金字塔
             pyramid[i][j] = clampedValue;
         }
     }
-    cout << "Pyramid has been filled with values." << endl;
+
+    cout << "Pyramid has been filled with values:" << endl;
+}
+
+double gaussian(double x, double y, double sigma) {
+    return exp(-(x * x + y * y) / (2 * sigma * sigma));
+}
+
+double random_noise(double scale) {
+    return (static_cast<double>(rand()) / RAND_MAX - 0.5) * scale;
+}
+
+//使用高斯函数进行填充
+void pyramid_gaussian_fill(int n, int k) {
+    srand(time(0)); // Seed for random number generation
+    pyramid.resize(n, vector<int>(n, 0));
+
+    // Define the number of clusters
+    int numClusters = k;
+    vector<pair<double, double>> clusterCenters;
+
+    // Randomly select k centers within the matrix
+    for (int i = 0; i < numClusters; ++i) {
+        double centerX = static_cast<double>(rand()) / RAND_MAX * n;
+        double centerY = static_cast<double>(rand()) / RAND_MAX * n;
+        clusterCenters.push_back({centerX, centerY});
+    }
+
+    // Fill the matrix with Gaussian distributions centered at the selected points
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            int value = 0;
+            for (const auto& center : clusterCenters) {
+                double g = gaussian(i - center.first, j - center.second, 3.0); // Adjust sigma to control size
+                value += static_cast<int>(g * 100); // Scale to 0-100
+            }
+            if (value > 100) value = 100;
+            pyramid[i][j] = value;
+        }
+    }
+
+    // Introduce some noise to make edges irregular
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            pyramid[i][j] += static_cast<int>(random_noise(30));
+            if (pyramid[i][j] < 0) pyramid[i][j] = 0;
+            if (pyramid[i][j] > 100) pyramid[i][j] = 100;
+        }
+    }
 }
 
 //DEBUG 输出金字塔至终端
@@ -149,8 +175,10 @@ void ofstream_test(){
 
 int main(){
     int n = 100;
+    int k = 6;
     // init_pyramid(n);
-    pyramid_normal_fill(n);
+    // pyramid_normal_fill(n, k);
+    pyramid_gaussian_fill(n, k);
     // print_pyramid(n);
     miner_greedy(n);
     print_path_to_file(n);
