@@ -22,28 +22,30 @@ with open('path.txt', 'r') as file:
     path_data = [tuple(map(int, line.strip().split(' '))) for line in lines]
 
 # 创建一个新的矩阵用于标记路径
-path_matrix = np.zeros_like(matrix)
+# path_matrix = np.zeros_like(matrix)
 
 # 标记路径点
+# for row, col in path_data:
+#     path_matrix[row-1, col] = 1  # 使用1标记路径点
 for row, col in path_data:
-    path_matrix[row-1, col] = 1  # 使用1标记路径点
+    matrix[row-1, col] = 110
 
 # 绘制原始金字塔热力图
 plt.figure(figsize=(10, 8))
-plt.subplot(1, 2, 1)
-plt.imshow(matrix, cmap='Blues', interpolation='nearest')
+# plt.subplot(1, 2, 1)
+plt.imshow(matrix, cmap='Reds', interpolation='nearest')
+# plt.imshow(path_matrix, cmap='Reds', interpolation='nearest', alpha=0.7)  # 使用红色半透明覆盖路径
 plt.colorbar()
 plt.title('Original Pyramid Heatmap')
 plt.xlabel('Position in Row')
 plt.ylabel('Row Number')
 
 # 绘制带有路径标记的新热力图
-plt.subplot(1, 2, 2)
-plt.imshow(path_matrix, cmap='Reds', interpolation='nearest', alpha=0.7)  # 使用红色半透明覆盖路径
-plt.colorbar()
-plt.title('Pyramid Heatmap with Path Annotation')
-plt.xlabel('Position in Row')
-plt.ylabel('Row Number')
+# plt.subplot(1, 2, 2)
+# plt.colorbar()
+# plt.title('Pyramid Heatmap with Path Annotation')
+# plt.xlabel('Position in Row')
+# plt.ylabel('Row Number')
 
 plt.tight_layout()
 plt.show()
