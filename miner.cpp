@@ -93,23 +93,23 @@ double random_noise(double scale) {
     return (static_cast<double>(rand()) / RAND_MAX - 0.5) * scale;
 }
 
-//使用高斯函数进行填充
+//使用高斯函数进行填充（最优填充方案）
 void pyramid_gaussian_fill(int n, int k) {
-    srand(time(0)); // Seed for random number generation
+    srand(time(0)); 
     pyramid.resize(n, vector<int>(n, 0));
 
-    // Define the number of clusters
+    // 确定聚集块中心点的数量和位置
     int numClusters = k;
     vector<pair<double, double>> clusterCenters;
 
-    // Randomly select k centers within the matrix
+    // 随机选择k个中心点
     for (int i = 0; i < numClusters; ++i) {
         double centerX = static_cast<double>(rand()) / RAND_MAX * n;
         double centerY = static_cast<double>(rand()) / RAND_MAX * n;
         clusterCenters.push_back({centerX, centerY});
     }
 
-    // Fill the matrix with Gaussian distributions centered at the selected points
+    // 使用高斯分布函数填充聚集块中心点附近的值
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
             int value = 0;
@@ -122,7 +122,7 @@ void pyramid_gaussian_fill(int n, int k) {
         }
     }
 
-    // Introduce some noise to make edges irregular
+    // 引入噪声让边缘不规则
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
             pyramid[i][j] += static_cast<int>(random_noise(30));
