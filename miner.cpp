@@ -24,6 +24,7 @@ int miner_greedy(int n){
         }
     }
     cout<<"path find successfully"<<endl;
+    return total_value;
 }
 
 //打印路径至终端
