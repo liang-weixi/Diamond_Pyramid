@@ -81,6 +81,51 @@ void print_pyramid_to_file(int n) {
 
 // 动态规划求解最优路径
 int dp_all(int n) {
+    vector<vector<int>> values(n, vector<int>(n, 0));
+    vector<vector<vector<pair<int, int>>>> path_all(n, vector<vector<pair<int, int>>>(n, vector<pair<int, int>>()));
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n - i; j++) {
+            if (i == 0 && j == 0) {
+                values[i][j] = pyramid[i][j];
+                path_all[i][j].push_back({i, j});
+            } else if (i == 0) {
+                values[i][j] = values[i][j - 1] + pyramid[i][j];
+                path_all[i][j] = path_all[i][j - 1];
+                path_all[i][j].push_back({i, j});
+            } else if (j == 0) {
+                values[i][j] = values[i - 1][j] + pyramid[i][j];
+                path_all[i][j] = path_all[i - 1][j];
+                path_all[i][j].push_back({i, j});
+            } else {
+                values[i][j] = max(values[i - 1][j], values[i][j - 1]) + pyramid[i][j];
+                if (values[i - 1][j] > values[i][j - 1]) {
+                    path_all[i][j] = path_all[i - 1][j];
+                    path_all[i][j].push_back({i, j});
+                } else {
+                    path_all[i][j] = path_all[i][j - 1];
+                    path_all[i][j].push_back({i, j});
+                }
+            }
+        }
+    }
+
+    int ret = values[0][n - 1];
+    for (int i = 1; i < n; i++) {
+        for (int j = n - 2; j >= 0; j--) {
+            if (values[i][j] > ret) {
+                ret = values[i][j];
+                path = path_all[i][j];
+            }
+        }
+    }
+    return ret;
+}
+
+// 打印路径至终端
+void print_path() {
+    for (int i = 0; i < path.size(); i++) {
+        cout << path[i].first << " " << path[i].second << endl;
+    }
 }
 
 // 打印路径至文件中
@@ -105,6 +150,12 @@ int main() {
 
     pyramid_gaussian_fill(n, k);  // 填充金字塔
     print_pyramid_to_file(n);
+
+    int val = dp_all(n);  // 动态规划求解最优路径
+
+    print_path();
+    print_path_to_file(n);
+    cout << val << endl;
 
     return 0;
 }

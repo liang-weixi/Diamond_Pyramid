@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # 读取文件
-with open('pyramid.txt', 'r') as file:
+with open('pyramid_dp.txt', 'r') as file:
     lines = file.readlines()
 
 # 将每一行转换为整数列表，并去掉可能存在的换行符
@@ -17,7 +17,7 @@ for i, row in enumerate(pyramid_data):
     matrix[i, :len(row)] = row
 
 # 路径数据读取
-with open('path.txt', 'r') as file:
+with open('path_dp.txt', 'r') as file:
     lines = file.readlines()
     path_data = [tuple(map(int, line.strip().split(' '))) for line in lines]
 
@@ -49,6 +49,3 @@ plt.ylabel('Row Number')
 
 plt.tight_layout()
 plt.show()
-
-
-
