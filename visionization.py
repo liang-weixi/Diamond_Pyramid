@@ -28,7 +28,7 @@ with open('path.txt', 'r') as file:
 # for row, col in path_data:
 #     path_matrix[row-1, col] = 1  # 使用1标记路径点
 for row, col in path_data:
-    matrix[row-1, col] = 110
+    matrix[row, col] = 110
 
 # 绘制原始金字塔热力图
 plt.figure(figsize=(10, 8))
