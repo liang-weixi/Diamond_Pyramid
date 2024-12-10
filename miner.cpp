@@ -6,22 +6,21 @@ vector<vector<int>> pyramid;
 vector<pair<int,int>> path;
 
 //贪心算法
-void miner_greedy(int n){
+int miner_greedy(int n){
     int x = 0, y = 0;
+    int total_value = 0;
     while(x + y < n - 1){
         if(x + 1 < n - y && y + 1 < n - x){
-            // cout<<"1"<<endl;
             if(pyramid[x+1][y] > pyramid[x][y+1]){
-                // cout<<"2"<<endl;
+                total_value += pyramid[x+1][y];
                 path.push_back(make_pair(x+1,y));
                 x++;
             }
             else{
-                // cout<<"2"<<endl;
+                total_value += pyramid[x][y+1];
                 path.push_back(make_pair(x,y+1));
                 y++;
             }
-            // cout<<"3"<<endl;
         }
     }
     cout<<"path find successfully"<<endl;
@@ -114,8 +113,8 @@ void pyramid_gaussian_fill(int n, int k) {
         for (int j = 0; j < n; ++j) {
             int value = 0;
             for (const auto& center : clusterCenters) {
-                double g = gaussian(i - center.first, j - center.second, 3.0); // Adjust sigma to control size
-                value += static_cast<int>(g * 100); // Scale to 0-100
+                double g = gaussian(i - center.first, j - center.second, 3.0); // 调整σ值以控制聚集块的形状和强度
+                value += static_cast<int>(g * 100); // 范围在0-100之间
             }
             if (value > 100) value = 100;
             pyramid[i][j] = value;
