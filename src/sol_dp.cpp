@@ -58,7 +58,7 @@ void pyramid_gaussian_fill(int n, int k) {
 // 将金字塔输出至文件
 void print_pyramid_to_file(int n) {
     try {
-        ofstream outfile("pyramid_dp.txt");
+        ofstream outfile("../pyramid_dp.txt");
         if (!outfile.is_open()) {
             cerr << "Failed to open file 'pyramid_dp.txt'" << endl;
             return;
@@ -83,7 +83,8 @@ void print_pyramid_to_file(int n) {
 int dp_all(int n) {
     vector<vector<int>> values(n, vector<int>(n, 0));
     vector<vector<vector<pair<int, int>>>> path_all(n, vector<vector<pair<int, int>>>(n, vector<pair<int, int>>()));
-    for (int i = 0; i < n; i++) {
+
+    for (int i = 0; i < n; i++)
         for (int j = 0; j < n - i; j++) {
             if (i == 0 && j == 0) {
                 values[i][j] = pyramid[i][j];
@@ -107,39 +108,36 @@ int dp_all(int n) {
                 }
             }
         }
-    }
 
     int ret = values[0][n - 1];
-    for (int i = 1; i < n; i++) {
-        for (int j = n - 2; j >= 0; j--) {
+    for (int i = 1; i < n; i++)
+        for (int j = n - 2; j >= 0; j--)
             if (values[i][j] > ret) {
                 ret = values[i][j];
                 path = path_all[i][j];
             }
-        }
-    }
+
     return ret;
 }
 
 // 打印路径至终端
 void print_path() {
-    for (int i = 0; i < path.size(); i++) {
+    for (int i = 0; i < path.size(); i++)
         cout << path[i].first << " " << path[i].second << endl;
-    }
 }
 
 // 打印路径至文件中
 void print_path_to_file(int n) {
-    ofstream outfile("path_dp.txt");
+    ofstream outfile("../path_dp.txt");
     // cout<<"1"<<endl;
     if (!outfile.is_open()) {
         cerr << "Failed to open file 'path_dp.txt'" << endl;
         return;
     }
     // outfile << n << endl;
-    for (int i = 0; i < path.size(); i++) {
+    for (int i = 0; i < path.size(); i++)
         outfile << path[i].first << " " << path[i].second << endl;
-    }
+
     cout << "path has been printed to file." << endl;
     outfile.close();
 }
@@ -153,7 +151,7 @@ int main() {
 
     int val = dp_all(n);  // 动态规划求解最优路径
 
-    print_path();
+    // print_path();
     print_path_to_file(n);
     cout << val << endl;
 
