@@ -137,15 +137,26 @@ void get_map_from_file(string filename, int n) {
 
 int main() {
     int n = 100;  // 金字塔的大小
-    int x = 10;   // 探测范围
+    // int x = 10;   // 探测范围
+    // 打开文件输出 val 的值
+    ofstream outfile("../val_results_x.txt");
 
     get_map_from_file("../pyramid_map.txt", n);
 
-    int val = step(n, x);
+    // 遍历 x 的值从 1 到 100
+    for (int x = 1; x <= 1; ++x) {
+        int val = step(n, x);
 
-    print_path();
-    print_path_to_file(n);
-    cout << val << endl;
+        // print_path();
+        // print_path_to_file(n);
+
+        // 将 val 的值写入文件
+        outfile << val << endl;
+        cout << val << endl;
+    }
+
+    // 关闭文件
+    outfile.close();
 
     return 0;
 }
