@@ -12,8 +12,10 @@ void print_path() {
 }
 
 // 打印路径至文件中
-void print_path_to_file(int n) {
-    ofstream outfile("../path_dp_x.txt");
+void print_path_to_file(int n, int k) {
+    stringstream ss;
+    ss << "../path_dp_x_"<< k <<".txt";
+    ofstream outfile(ss.str());
     // cout<<"1"<<endl;
     if (!outfile.is_open()) {
         cerr << "Failed to open file 'path_dp.txt'" << endl;
@@ -23,7 +25,7 @@ void print_path_to_file(int n) {
     for (int i = 0; i < path.size(); i++)
         outfile << path[i].first << " " << path[i].second << endl;
 
-    cout << "path has been printed to file." << endl;
+    // cout << "path has been printed to file." << endl;
     outfile.close();
 }
 
@@ -84,7 +86,7 @@ int step(int n, int x) {
             break;
 
         // 右边的局部最优比左边大，向右下方走一步
-        if (right_value > left_value) {
+        if (right_value >= left_value) {
             current_j += 1;                          // 向右走一步
             ret += pyramid[current_i][current_j];    // 累加这一步的价值
             path.push_back({current_i, current_j});  // 记录这一步的路径
@@ -144,15 +146,16 @@ int main() {
     get_map_from_file("../pyramid_map.txt", n);
 
     // 遍历 x 的值从 1 到 100
-    for (int x = 1; x <= 1; ++x) {
+    for (int x = 1; x <= 100; ++x) {
+        path.clear();
         int val = step(n, x);
 
         // print_path();
-        // print_path_to_file(n);
+        print_path_to_file(n, x);
 
         // 将 val 的值写入文件
         outfile << val << endl;
-        cout << val << endl;
+        // cout << val << endl;
     }
 
     // 关闭文件
