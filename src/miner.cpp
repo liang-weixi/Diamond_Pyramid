@@ -105,8 +105,8 @@ void pyramid_gaussian_fill(int n, int k) {
 
     // 随机选择k个中心点
     for (int i = 0; i < numClusters; ++i) {
-        double centerX = static_cast<double>(rand()) / RAND_MAX * n;
-        double centerY = static_cast<double>(rand()) / RAND_MAX * n;
+        double centerX = static_cast<double>(rand()) / RAND_MAX * n / 2;
+        double centerY = static_cast<double>(rand()) / RAND_MAX * (n - centerX);
         clusterCenters.push_back({centerX, centerY});
     }
 
@@ -127,7 +127,7 @@ void pyramid_gaussian_fill(int n, int k) {
     // 引入噪声让边缘不规则
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
-            pyramid[i][j] += static_cast<int>(random_noise(30));
+            pyramid[i][j] += static_cast<int>(random_noise(65));
             if (pyramid[i][j] < 0)
                 pyramid[i][j] = 0;
             if (pyramid[i][j] > 100)
@@ -153,7 +153,7 @@ void print_pyramid(int n) {
 // 将金字塔输出至文件
 void print_pyramid_to_file(int n) {
     try {
-        ofstream outfile("../pyramid.txt");
+        ofstream outfile("pyramid.txt");
         if (!outfile.is_open()) {
             cerr << "Failed to open file 'pyramid.txt'" << endl;
             return;
@@ -182,13 +182,14 @@ void ofstream_test() {
 
 int main() {
     int n = 100;
-    int k = 6;
+    int k = 12;
+    cin>>k;
     // init_pyramid(n);
     // pyramid_normal_fill(n, k);
     pyramid_gaussian_fill(n, k);
     // print_pyramid(n);
-    miner_greedy(n);
-    print_path_to_file(n);
+    // miner_greedy(n);
+    // print_path_to_file(n);
     // ofstream_test();
     print_pyramid_to_file(n);
     // close_pyramid(n);
