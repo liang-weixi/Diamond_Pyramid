@@ -180,18 +180,58 @@ void ofstream_test() {
     outfile.close();
 }
 
+//从文件中读取地图
+void get_map_from_file(string filename, int n){
+    ifstream map_file(filename);
+
+    string line;
+    while (getline(map_file, line)) { // 逐行读取文件
+        if (line.empty()) continue; // 忽略空行
+
+        stringstream ss(line);
+        vector<int> row;
+        row.assign(n, 0); //设置行长度为n
+        string item;
+        int row_num = 0;
+
+        while (getline(ss, item, ',')) { // 按逗号分割每行的数据
+            if (!item.empty()) {
+                try {
+                    row[row_num++] = stoi(item);
+                } catch (const invalid_argument& e) {
+                    cerr << "Invalid argument: " << e.what() << endl;
+                    throw;
+                } catch (const out_of_range& e) {
+                    cerr << "Out of range: " << e.what() << endl;
+                    throw;
+                }
+            }
+        }
+
+        if (!row.empty()) {
+            pyramid.push_back(row); // 将当前行添加到金字塔中
+        }
+    }
+
+    map_file.close();
+}
+
+
+
+
 int main() {
     int n = 100;
-    int k = 12;
-    cin>>k;
+    // int k = 12;
+    // cin>>k;
     // init_pyramid(n);
     // pyramid_normal_fill(n, k);
-    pyramid_gaussian_fill(n, k);
+    // pyramid_gaussian_fill(n, k);
+    get_map_from_file("../pyramid.txt", n);
     // print_pyramid(n);
     // miner_greedy(n);
     // print_path_to_file(n);
     // ofstream_test();
-    print_pyramid_to_file(n);
+    // print_pyramid_to_file(n);
     // close_pyramid(n);
     return 0;
 }
