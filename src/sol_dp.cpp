@@ -142,16 +142,51 @@ void print_path_to_file(int n) {
     outfile.close();
 }
 
+// 从文件中读取地图
+void get_map_from_file(string filename, int n) {
+    ifstream map_file(filename);
+
+    string line;
+    while (getline(map_file, line)) {  // 逐行读取文件
+        if (line.empty())
+            continue;  // 忽略空行
+
+        stringstream ss(line);
+        vector<int> row;
+        row.assign(n, 0);  // 设置行长度为n
+        string item;
+        int row_num = 0;
+
+        while (getline(ss, item, ',')) {  // 按逗号分割每行的数据
+            if (!item.empty()) {
+                try {
+                    row[row_num++] = stoi(item);
+                } catch (const invalid_argument& e) {
+                    cerr << "Invalid argument: " << e.what() << endl;
+                    throw;
+                } catch (const out_of_range& e) {
+                    cerr << "Out of range: " << e.what() << endl;
+                    throw;
+                }
+            }
+        }
+
+        if (!row.empty()) {
+            pyramid.push_back(row);  // 将当前行添加到金字塔中
+        }
+    }
+
+    map_file.close();
+}
+
 int main() {
     int n = 100;  // 金字塔层数
-    int k = 6;    //
 
-    pyramid_gaussian_fill(n, k);  // 填充金字塔
-    print_pyramid_to_file(n);
+    get_map_from_file("../pyramid_map.txt", n);
 
     int val = dp_all(n);  // 动态规划求解最优路径
 
-    // print_path();
+    print_path();
     print_path_to_file(n);
     cout << val << endl;
 
