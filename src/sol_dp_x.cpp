@@ -102,86 +102,70 @@ void print_path_to_file(int n) {
 }
 
 // 探测范围为 x 的动态规划算法
-int dp_x(int n, int x) {
-    vector<vector<vector<pair<int, int>>>> path_all(n, vector<vector<pair<int, int>>>(n, vector<pair<int, int>>()));
+// 传入起始点的坐标
+int dp_x(int start_i, int start_j, int n, int x) {
+    // 先判断最大探测范围还剩多少
+    if (start_i + start_j + x > n - 1)
+        x = n - 1 - start_i - start_j;
 
-    int i = 0, j = 0;
     int ret = 0;
-    while (i + j < n) {
-        vector<vector<int>> values(x + 1, vector<int>(x + 1, 0));
-        // 记录局部起始位置
-        int start_i = i;
-        int start_j = j;
+    vector<vector<int>> values(n, vector<int>(n, 0));
 
-        cout << "i: " << i << " j: " << j << endl;
-
-        for (int m = 0; m < x + 1, i < n; m++, i++) {
-            for (int p = 0; p < x - m + 1, j < n; p++, j++) {
-                if (i == start_i && j == start_j) {
-                    values[m][p] = pyramid[i][j];
-                    path_all[i][j].push_back({i, j});
-                } else if (i == start_i) {
-                    values[m][p] = values[m][p - 1] + pyramid[i][j];
-                    path_all[i][j] = path_all[i][j - 1];
-                    path_all[i][j].push_back({i, j});
-                } else if (j == start_j) {
-                    values[m][p] = values[m - 1][p] + pyramid[i][j];
-                    path_all[i][j] = path_all[i - 1][j];
-                    path_all[i][j].push_back({i, j});
-                } else {
-                    values[m][p] = max(values[m - 1][p], values[m][p - 1]) + pyramid[i][j];
-                    if (values[m - 1][p] > values[m][p - 1]) {
-                        path_all[i][j] = path_all[i - 1][j];
-                        path_all[i][j].push_back({i, j});
-                    } else {
-                        path_all[i][j] = path_all[i][j - 1];
-                        path_all[i][j].push_back({i, j});
-                    }
-                }
+    for (int i = start_i; i < start_i + x + 1; i++)
+        for (int j = start_j; j < start_j + x + 1; j++) {
+            if (i == start_i && j == start_j) {
+                values[i][j] = pyramid[i][j];
+            } else if (i == start_i) {
+                values[i][j] = values[i][j - 1] + pyramid[i][j];
+            } else if (j == start_j) {
+                values[i][j] = values[i - 1][j] + pyramid[i][j];
+            } else {
+                values[i][j] = max(values[i - 1][j], values[i][j - 1]) + pyramid[i][j];
             }
         }
 
-        cout << "i: " << i << " j: " << j << endl;
-
-        if (start_i + start_j + x <= n - 1) {
-            // 更新探测范围内的路径和value, 更新选择局部最优的i,j
-            int ret_temp = values[0][x];
-            i = start_i;
-            j = start_j + x;
-            for (int m = 1; m < x + 1; m++) {
-                for (int p = x - 1; p >= 0; p--) {
-                    if (values[m][p] > ret) {
-                        ret_temp = values[m][p];
-                        path = path_all[start_i + m][start_j + p];
-
-                        // 更新起始点为局部最优的i,j
-                        i = start_i + m;
-                        j = start_j + p;
-                    }
-                }
+    for (int i = start_i; i < start_i + x + 1; i++)
+        for (int j = start_j + x; j >= start_j; j--)
+            if (values[i][j] > ret) {
+                ret = values[i][j];
             }
 
-            // print_path();
-            ret += ret_temp;
+    return ret;
+}
+
+// 矿工前进过程
+int step(int n, int x) {
+    int ret = pyramid[0][0];
+
+    // 起始位置
+    int current_i = 0;
+    int current_j = 0;
+
+    while (current_i + current_j < n) {
+        int left_value = -1;
+        int right_value = -1;
+        // 先处理右边的局部最优
+        if (current_i < n && current_j + 1 < n) {
+            right_value = dp_x(current_i, current_j + 1, n, x - 1);
+        }
+        // 再处理左边的局部最优
+        if (current_i + 1 < n && current_j < n) {
+            left_value = dp_x(current_i + 1, current_j, n, x - 1);
+        }
+
+        // 说明到达金字塔底部
+        if (right_value == -1 && left_value == -1)
+            break;
+
+        // 右边的局部最优比左边大，向右下方走一步
+        if (right_value > left_value) {
+            current_j += 1;                          // 向右走一步
+            ret += pyramid[current_i][current_j];    // 累加这一步的价值
+            path.push_back({current_i, current_j});  // 记录这一步的路径
         } else {
-            int rest = n - 1 - (start_i + start_j);
-            int ret_temp = values[0][rest];
-            i = start_i;
-            j = start_j + rest;
-            for (int m = 0; m < rest + 1; m++) {
-                for (int p = rest; p >= 0; p--) {
-                    if (values[m][p] > ret) {
-                        ret_temp = values[m][p];
-                        path = path_all[start_i + m][start_j + p];
-
-                        // 更新起始点为局部最优的i,j
-                        i = start_i + m;
-                        j = start_j + p;
-                    }
-                }
-            }
-
-            ret += ret_temp;
+            current_i += 1;                          // 向左走一步
+            ret += pyramid[current_i][current_j];    // 累加这一步的价值
+            path.push_back({current_i, current_j});  // 记录这一步的路径
         }
     }
 
@@ -191,12 +175,12 @@ int dp_x(int n, int x) {
 int main() {
     int n = 100;  // 金字塔的大小
     int k = 6;    // 聚集块的数量
-    int x = 2;    // 探测范围
+    int x = 1;    // 探测范围
 
     pyramid_gaussian_fill(n, k);
     print_pyramid_to_file(n);
 
-    int val = dp_x(n, x);
+    int val = step(n, x);
 
     print_path();
     print_path_to_file(n);
