@@ -180,6 +180,8 @@ void ofstream_test() {
     outfile.close();
 }
 
+
+
 //从文件中读取地图
 void get_map_from_file(string filename, int n){
     ifstream map_file(filename);
