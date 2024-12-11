@@ -1,3 +1,9 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+vector<vector<int>> pyramid;  // 存储金字塔的二维数组
+
 // 使用随机数值填写金字塔
 void pyramid_random_fill(int n) {
     for (int i = 0; i < n; i++) {
@@ -121,4 +127,14 @@ void print_pyramid_to_file(int n) {
         cerr << "Error: " << e.what() << endl;
         return;
     }
+}
+
+int main() {
+    int n = 100;
+    int k = 12;
+
+    pyramid_gaussian_fill(n, k);
+
+    print_pyramid_to_file(n);
+    return 0;
 }
