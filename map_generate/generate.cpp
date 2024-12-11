@@ -79,7 +79,7 @@ void pyramid_gaussian_fill(int n, int k) {
         }
     }
 
-    // 引入噪声让边缘不规则
+    // 引入噪声进行空白位置填充
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
             pyramid[i][j] += static_cast<int>(random_noise(65));
