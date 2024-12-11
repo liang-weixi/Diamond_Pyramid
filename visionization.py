@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # 读取文件
-with open('pyramid_dp.txt', 'r') as file:
+with open('pyramid.txt', 'r') as file:
     lines = file.readlines()
 
 # 将每一行转换为整数列表，并去掉可能存在的换行符
@@ -17,9 +17,9 @@ for i, row in enumerate(pyramid_data):
     matrix[i, :len(row)] = row
 
 # 路径数据读取
-with open('path_dp.txt', 'r') as file:
-    lines = file.readlines()
-    path_data = [tuple(map(int, line.strip().split(' '))) for line in lines]
+# with open('path.txt', 'r') as file:
+#     lines = file.readlines()
+#     path_data = [tuple(map(int, line.strip().split(' '))) for line in lines]
 
 # 创建一个新的矩阵用于标记路径
 # path_matrix = np.zeros_like(matrix)
@@ -27,8 +27,8 @@ with open('path_dp.txt', 'r') as file:
 # 标记路径点
 # for row, col in path_data:
 #     path_matrix[row-1, col] = 1  # 使用1标记路径点
-for row, col in path_data:
-    matrix[row, col] = 110
+# for row, col in path_data:
+#     matrix[row, col] = 110
 
 # 绘制原始金字塔热力图
 plt.figure(figsize=(10, 8))
