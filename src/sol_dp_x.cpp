@@ -86,7 +86,7 @@ int step(int n, int x) {
             break;
 
         // 右边的局部最优比左边大，向右下方走一步
-        if (right_value >= left_value) {
+        if (right_value > left_value) {
             current_j += 1;                          // 向右走一步
             ret += pyramid[current_i][current_j];    // 累加这一步的价值
             path.push_back({current_i, current_j});  // 记录这一步的路径
@@ -141,7 +141,7 @@ int main() {
     int n = 100;  // 金字塔的大小
     // int x = 10;   // 探测范围
     // 打开文件输出 val 的值
-    ofstream outfile("../data/val_results_x.txt");
+    ofstream outfile("../data/val_results_x_left.txt");
 
     get_map_from_file("../data/pyramid_map.txt", n);
 
@@ -151,7 +151,7 @@ int main() {
         int val = step(n, x);
 
         // print_path();
-        print_path_to_file(n, x);
+        // print_path_to_file(n, x);
 
         // 将 val 的值写入文件
         outfile << val << endl;

@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 x_values = []
 count = []
 
-with open('data/val_results_x.txt', 'r') as values:
+with open('data/val_results_x_left.txt', 'r') as values:
     line_number = 0
     for value in values:
         x_values.append(float(value))
@@ -17,4 +17,4 @@ plt.ylabel('values')
 plt.title('ranges vs. values')
 plt.legend()
 # plt.show()
-plt.savefig('detect_range_value.png')
+plt.savefig('detect_range_value_left.png')
