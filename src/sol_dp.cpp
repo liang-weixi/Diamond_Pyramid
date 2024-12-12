@@ -128,7 +128,7 @@ void print_path() {
 
 // 打印路径至文件中
 void print_path_to_file(int n) {
-    ofstream outfile("../path_dp.txt");
+    ofstream outfile("../data/path_dp.txt");
     // cout<<"1"<<endl;
     if (!outfile.is_open()) {
         cerr << "Failed to open file 'path_dp.txt'" << endl;
@@ -182,7 +182,7 @@ void get_map_from_file(string filename, int n) {
 int main() {
     int n = 100;  // 金字塔层数
 
-    get_map_from_file("../pyramid_map.txt", n);
+    get_map_from_file("../data/pyramid_map.txt", n);
 
     int val = dp_all(n);  // 动态规划求解最优路径
 

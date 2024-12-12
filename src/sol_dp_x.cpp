@@ -14,7 +14,7 @@ void print_path() {
 // 打印路径至文件中
 void print_path_to_file(int n, int k) {
     stringstream ss;
-    ss << "../path_dp_x_"<< k <<".txt";
+    ss << "../data/path_dp_x_"<< k <<"_right.txt";
     ofstream outfile(ss.str());
     // cout<<"1"<<endl;
     if (!outfile.is_open()) {
@@ -141,9 +141,9 @@ int main() {
     int n = 100;  // 金字塔的大小
     // int x = 10;   // 探测范围
     // 打开文件输出 val 的值
-    ofstream outfile("../val_results_x.txt");
+    ofstream outfile("../data/val_results_x.txt");
 
-    get_map_from_file("../pyramid_map.txt", n);
+    get_map_from_file("../data/pyramid_map.txt", n);
 
     // 遍历 x 的值从 1 到 100
     for (int x = 1; x <= 100; ++x) {

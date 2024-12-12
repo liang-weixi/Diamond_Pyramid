@@ -35,7 +35,7 @@ void print_path() {
 
 // 打印路径至文件中
 void print_path_to_file(int n) {
-    ofstream outfile("../path.txt");
+    ofstream outfile("../data/path_greedy.txt");
     // cout<<"1"<<endl;
     if (!outfile.is_open()) {
         cerr << "Failed to open file 'path.txt'" << endl;
@@ -88,18 +88,9 @@ void get_map_from_file(string filename, int n) {
 
 int main() {
     int n = 100;
-    // int k = 12;
-    // cin>>k;
-    // init_pyramid(n);
-    // pyramid_normal_fill(n, k);
-    // pyramid_gaussian_fill(n, k);
-    get_map_from_file("../pyramid_map.txt", n);
-    // print_pyramid(n);
+    get_map_from_file("../data/pyramid_map.txt", n);
     int val = miner_greedy(n);
     cout << val << endl;
-    // print_path_to_file(n);
-    // ofstream_test();
-    // print_pyramid_to_file(n);
-    // close_pyramid(n);
+    print_path_to_file(n);
     return 0;
 }
